@@ -3,37 +3,85 @@ exports.handler = async (event) => {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
 
-  const { values, profileName } = JSON.parse(event.body);
+  try {
+    const { aspects, values } = JSON.parse(event.body);
 
-  const prompt = `Sei un esperto di psicologia dei fan Disney. Una persona ha distribuito 100 punti tra 3 aspetti di Topolino:
-- Avventure e storie: ${values[0]} punti
-- Estetica e merchandise: ${values[1]} punti
-- Parchi e magia: ${values[2]} punti
+    // Save to Supabase
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_ANON_KEY;
 
-Il profilo assegnato è: "${profileName}".
+    const savePayload = {
+      v1: values[0], v2: values[1], v3: values[2], v4: values[3],
+      v5: values[4], v6: values[5], v7: values[6], v8: values[7],
+      v9: values[8], v10: values[9],
+    };
 
-Scrivi un'analisi del profilo in 3-4 frasi: cosa la caratterizza come fan, cosa la spinge emotivamente, e un consiglio concreto su come approfondire la sua passione. Tono caldo, coinvolgente, un po' poetico. Inizia direttamente con l'analisi senza saluti o introduzioni.`;
+    await fetch(`${supabaseUrl}/rest/v1/responses`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Prefer': 'return=minimal',
+      },
+      body: JSON.stringify(savePayload),
+    });
 
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': process.env.ANTHROPIC_API_KEY,
-      'anthropic-version': '2023-06-01',
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 1000,
-      messages: [{ role: 'user', content: prompt }],
-    }),
-  });
+    // Build Claude prompt
+    const top3 = aspects
+      .map((a, i) => ({ label: a.question, value: values[i] }))
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 3)
+      .filter(a => a.value > 0);
 
-  const data = await response.json();
-  const text = data.content?.find(b => b.type === 'text')?.text || '';
+    const allScores = aspects
+      .map((a, i) => `- ${a.question}: ${values[i]} punti`)
+      .join('\n');
 
-  return {
-    statusCode: 200,
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ result: text }),
-  };
+    const prompt = `Sei una psicologa specializzata in relazioni consensualmente non monogame e dinamiche HotWife. Una donna ha completato un test sulle caratteristiche del suo terzo ideale, distribuendo 50 punti tra 10 aspetti (massimo 10 per aspetto).
+
+Ecco i punteggi completi:
+${allScores}
+
+Le sue priorità principali sono: ${top3.map(t => `"${t.label}" (${t.value} punti)`).join(', ')}.
+
+Scrivi un'analisi psicologica profonda e intima di 5-6 frasi. Per ogni priorità principale:
+- Rifletti su cosa rivela di lei come donna e come HotWife consapevole
+- Collega quella scelta al desiderio di accendere nel marito una gelosia intensa — non distruttiva, ma eccitante e rigenerante per la coppia
+- Evidenzia come quella caratteristica specifica del terzo sia uno strumento per far perdere al marito il controllo emotivo, spingendolo a volersi riappropriare di lei con una forza e un desiderio che nella routine quotidiana si era attenuato
+- Usa un tono intimo, complice, come una conversazione tra donne consapevoli — celebra la sua intelligenza nel saper orchestrare queste dinamiche
+- Chiudi con una frase che valorizzi il fatto che lei sa esattamente cosa vuole e perché
+
+Scrivi in forma di paragrafo fluido e coinvolgente, senza elenchi puntati. Inizia direttamente senza saluti o introduzioni.`;
+
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-5',
+        max_tokens: 1024,
+        messages: [{ role: 'user', content: prompt }],
+      }),
+    });
+
+    const data = await response.json();
+    console.log('Anthropic status:', response.status);
+    const text = data.content?.find(b => b.type === 'text')?.text || '';
+
+    return {
+      statusCode: 200,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ result: text }),
+    };
+  } catch (err) {
+    console.error('Error:', err.message);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: err.message }),
+    };
+  }
 };
