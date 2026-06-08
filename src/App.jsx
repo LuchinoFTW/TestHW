@@ -10,7 +10,7 @@ const ASPECTS = [
   { emoji: "💦", question: "Quanto è importante che possa lasciare un segno molto evidente da mostrare a tuo marito?" },
   { emoji: "👄", question: "Quanto è importante che sia bravo a baciare?" },
   { emoji: "👅", question: "Quanto conta l'abilità nel sesso orale?" },
-  { emoji: "🔥", question: "Quanto è importante che sia bravo nella penetrazione (movimento, passione, durate, ecc,},
+  { emoji: "🔥", question: "Quanto è importante che sia bravo nella penetrazione (movimento, passione, durate, ecc,"},
 ];
 
 const MAX_TOTAL = 50;
