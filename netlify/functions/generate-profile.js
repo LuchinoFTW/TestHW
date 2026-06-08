@@ -45,12 +45,12 @@ ${allScores}
 
 Le sue priorità principali sono: ${top3.map(t => `"${t.label}" (${t.value} punti)`).join(', ')}.
 
-Scrivi un'analisi psicologica profonda e intima di 5-6 frasi. Per ogni priorità principale:
-- Rifletti su cosa rivela di lei come donna e come HotWife consapevole
+Scrivi un'analisi psicologica profonda e intima di 5-6 frasi. Per ogni categoria con almeno 7 punti assegnati.
+- Aiutala a riflettere su cosa rivela di lei come donna e come HotWife, quali sono i trigger magari inconsapevoli che giela rendono attraente
 - Collega quella scelta al desiderio di accendere nel marito una gelosia intensa — non distruttiva, ma eccitante e rigenerante per la coppia
-- Evidenzia come quella caratteristica specifica del terzo sia uno strumento per far perdere al marito il controllo emotivo, spingendolo a volersi riappropriare di lei con una forza e un desiderio che nella routine quotidiana si era attenuato
-- Usa un tono intimo, complice, come una conversazione tra donne consapevoli — celebra la sua intelligenza nel saper orchestrare queste dinamiche
-- Chiudi con una frase che valorizzi il fatto che lei sa esattamente cosa vuole e perché
+- Evidenzia come quella caratteristica specifica del terzo sia uno strumento per far perdere al marito il controllo emotivo, spingendolo a volersi riappropriare di lei con una forza e un desiderio che nella routine quotidiana si era attenuato. Specifica perché questo può aiutare la coppia a mantenere viva la passione che nel caso della donna necessita biologicamente di risultare attraente a partner multipli mentre nel caso dell'uomo necessita di provare possessività verso una sola donna (cosa che però cala nel corso del tempo e che queste dinamiche aiutano a mantenere viva).
+- Usa un tono intimo, complice, come una conversazione tra donne consapevoli — celebra la sua intelligenza nel saper orchestrare queste dinamiche e nell'aver saputo confessare al marito una dinamica (quella di sentirsi desiderata) comune in tutte le donne ma che in poche riescono a confessare.
+- Chiudi con una frase che valorizzi il fatto che lei sa esattamente cosa vuole e perchè e di come questo sue scelte nel test siano quelle più comuni e spesso anche quelle più efficaci per mantenere la passione nella coppia.
 
 Scrivi in forma di paragrafo fluido e coinvolgente, senza elenchi puntati. Inizia direttamente senza saluti o introduzioni.`;
 
