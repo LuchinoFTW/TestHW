@@ -8,9 +8,9 @@ const ASPECTS = [
   { emoji: "📏", question: "Quanto conta la lunghezza della sua dotazione?" },
   { emoji: "⭕", question: "Quanto conta lo spessore della sua dotazione?" },
   { emoji: "💦", question: "Quanto è importante che possa lasciare un segno molto evidente da mostrare a tuo marito?" },
-  { emoji: "👄", question: "Quanto è importante che ti faccia sentire persa tra le sue labbra?" },
-  { emoji: "👅", question: "Quanto conta l'abilità con la lingua?" },
-  { emoji: "🔥", question: "Quanto è importante che sappia muoversi con sensualità e vigore in tutte le posizioni, durando per tutto il tempo necessario?" },
+  { emoji: "👄", question: "Quanto è importante che sia bravo a baciare?" },
+  { emoji: "👅", question: "Quanto conta l'abilità nel sesso orale?" },
+  { emoji: "🔥", question: "Quanto è importante che sia bravo nella penetrazione (movimento, passione, durate, ecc,},
 ];
 
 const MAX_TOTAL = 50;
