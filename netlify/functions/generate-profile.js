@@ -25,64 +25,60 @@ exports.handler = async (event) => {
       }),
     });
 
-    // Priority order for analysis (after emotional connection)
-    // Index: 0=quanto ci pensa, 1=esteticamente bello, 2=attrazione emotiva,
+    // Priority list — dimensioni è una voce unica che copre indici 4 e 5
+    // Index: 0=quanto ci pensa, 1=esteticamente bello, 2=attrazione emotiva (gestita a parte),
     //        3=dominante, 4=lunghezza, 5=larghezza, 6=segno evidente,
     //        7=bacio, 8=sesso orale, 9=sesso penetrativo
     const PRIORITY = [
-      { index: 4, paired: 5, label: 'Dimensioni (lunghezza e larghezza)' },
-      { index: 0, label: 'Frequenza dei pensieri' },
-      { index: 6, label: 'Segno evidente' },
-      { index: 7, label: 'Il bacio' },
-      { index: 1, label: 'Aspetto estetico' },
-      { index: 3, label: 'Carattere dominante' },
-      { index: 8, label: 'Sesso orale' },
-      { index: 9, label: 'Sesso penetrativo' },
+      { id: 'dimensioni', indices: [4, 5], label: 'Dimensioni' },
+      { id: 'pensieri',   indices: [0],    label: 'Frequenza dei pensieri' },
+      { id: 'segno',      indices: [6],    label: 'Segno evidente' },
+      { id: 'bacio',      indices: [7],    label: 'Il bacio' },
+      { id: 'estetica',   indices: [1],    label: 'Aspetto estetico' },
+      { id: 'dominante',  indices: [3],    label: 'Carattere dominante' },
+      { id: 'orale',      indices: [8],    label: 'Sesso orale' },
+      { id: 'penetrativo',indices: [9],    label: 'Sesso penetrativo' },
     ];
 
     const q3score = values[2];
 
-    // Find top 2 from priority list with score >= 7 (skip paired index 5)
+    // Pick top 2 slots: each entry in PRIORITY counts as 1 slot regardless of how many indices it covers
     const top2 = [];
     for (const p of PRIORITY) {
       if (top2.length >= 2) break;
-      const score = p.paired
-        ? Math.max(values[p.index], values[p.paired])
-        : values[p.index];
+      const score = Math.max(...p.indices.map(i => values[i]));
       if (score >= 7) top2.push({ ...p, score });
     }
 
-    // Build category instructions
-    const categoryInstructions = {
-      4: `Ha assegnato ${values[4]} punti alla lunghezza e ${values[5]} punti alla larghezza. Unisci le due dimensioni in un'unica riflessione: falla riflettere sul fatto che se cerca questa caratteristica, forse inconsapevolmente il suo corpo avverte una mancanza nel marito. Se lui è limitato sotto questo aspetto, scegliere un terzo molto dotato aiuta a creare un forte impatto emotivo e un senso di urgenza di riappropriarsi nel marito.`,
-      0: `Ha assegnato ${values[0]} punti alla frequenza con cui pensa a fare sesso con un altro uomo. Questo rivela quanto questa fantasia sia già presente e viva nella sua mente — non è una curiosità occasionale, è un desiderio radicato. Falla riflettere su quanto tempo ha già trascorso a immaginare questo scenario e su cosa significhi per lei finalmente agire.`,
-      6: `Ha assegnato ${values[6]} punti all'importanza di un segno evidente da mostrare al marito. Falla riflettere sul perché voglia mostrare al marito il segno evidente del piacere del terzo sul suo corpo, e quanto sia importante per lei che lui la accetti anche così — è un atto di fiducia estrema e al tempo stesso un potente innesco di gelosia e riappropriazione.`,
-      7: `Ha assegnato ${values[7]} punti all'importanza del bacio. Come l'attrazione emotiva, il bacio rivela che lei vuole sentirsi coinvolta anche emotivamente, non solo fisicamente. Falla riflettere su quanto questa dimensione intima e personale — normalmente riservata al partner — diventi ancora più carica di significato in questo contesto.`,
-      1: `Ha assegnato ${values[1]} punti all'aspetto estetico. Falla riflettere su cosa significa per lei desiderare un terzo che sia bello da guardare — non è vanità, è il desiderio di sentirsi scelta da qualcuno che anche gli altri desiderano, e di mostrare al marito che lei può attirare uomini che molte donne vorrebbero.`,
-      3: `Ha assegnato ${values[3]} punti al carattere dominante. Falla riflettere sul perché voglia sentirsi dominata da un altro uomo — spesso indica il desiderio di abbandonarsi completamente, di non dover controllare nulla, di essere semplicemente desiderata con una forza che non lascia spazio a dubbi. E questo contrasto con la vita quotidiana è esattamente ciò che rende il marito impazzire.`,
-      8: `Ha assegnato ${values[8]} punti all'abilità nel sesso orale. Falla riflettere su quanto questa preferenza riveli il desiderio di essere messa al centro, di ricevere piacere senza dover dare nulla in cambio — un piacere puro e dedicato solo a lei.`,
-      9: `Ha assegnato ${values[9]} punti al sesso penetrativo completo. Questo è il desiderio dell'esperienza totale — non una fantasia parziale ma il desiderio di viverla completamente, con tutto quello che comporta emotivamente e fisicamente.`,
+    // Category text builders
+    const categoryText = {
+      dimensioni: `Ha assegnato ${values[4]} punti alla lunghezza e ${values[5]} punti alla larghezza. Unisci le due dimensioni in un'unica riflessione: se cerca questa caratteristica, forse inconsapevolmente il suo corpo avverte una mancanza nel marito. Scegliere un terzo molto dotato crea un forte impatto emotivo e un senso di urgenza di riappropriarsi nel marito.`,
+      pensieri: `Ha assegnato ${values[0]} punti alla frequenza con cui pensa a fare sesso con un altro uomo. Questo rivela quanto questa fantasia sia già presente e viva nella sua mente — non è una curiosità occasionale, è un desiderio radicato. Falla riflettere su quanto tempo ha già trascorso a immaginare questo scenario e su cosa significhi per lei finalmente agire.`,
+      segno: `Ha assegnato ${values[6]} punti all'importanza di un segno evidente da mostrare al marito. Falla riflettere sul perché voglia mostrare al marito il segno evidente del piacere del terzo sul suo corpo, e quanto sia importante per lei che lui la accetti anche così — è un atto di fiducia estrema e al tempo stesso un potente innesco di gelosia e riappropriazione.`,
+      bacio: `Ha assegnato ${values[7]} punti all'importanza del bacio. Come l'attrazione emotiva, il bacio rivela che lei vuole sentirsi coinvolta anche emotivamente. Falla riflettere su quanto questa dimensione intima — normalmente riservata al partner — diventi ancora più carica di significato in questo contesto.`,
+      estetica: `Ha assegnato ${values[1]} punti all'aspetto estetico. Falla riflettere su cosa significa desiderare un terzo bello da guardare — è il desiderio di sentirsi scelta da qualcuno che anche gli altri desiderano, e di mostrare al marito che lei può attirare uomini che molte donne vorrebbero.`,
+      dominante: `Ha assegnato ${values[3]} punti al carattere dominante. Falla riflettere sul perché voglia sentirsi dominata da un altro uomo — spesso indica il desiderio di abbandonarsi completamente, di essere semplicemente desiderata con una forza che non lascia spazio a dubbi. Questo contrasto con la vita quotidiana è esattamente ciò che fa impazzire il marito.`,
+      orale: `Ha assegnato ${values[8]} punti all'abilità nel sesso orale. Falla riflettere su quanto questa preferenza riveli il desiderio di essere messa al centro, di ricevere piacere puro dedicato solo a lei.`,
+      penetrativo: `Ha assegnato ${values[9]} punti al sesso penetrativo completo. Questo è il desiderio dell'esperienza totale — non una fantasia parziale ma il desiderio di viverla completamente, con tutto quello che comporta emotivamente e fisicamente.`,
     };
 
-    // Q3 section
     const q3text = q3score >= 5
-      ? `Hai assegnato ${q3score} punti all'attrazione emotiva verso qualcuno che già conosci. Questo è un segnale molto significativo: hai capito che la leva più forte di questo gioco non è fisica ma emotiva. Sarebbe travolgente per il tuo compagno sapere che sei con un terzo per il quale provi un'attrazione vera, mentale e non solo fisica. Potresti iniziare raccontando al marito su quali persone che entrambi conoscete hai fantasticato, per testare la sua reazione emotiva — è un modo delicato ma potentissimo per aprire questa conversazione.`
+      ? `Hai assegnato ${q3score} punti all'attrazione emotiva verso qualcuno che già conosci. Questo è un segnale molto significativo: hai capito che la leva più forte di questo gioco non è fisica ma emotiva. Sarebbe travolgente per il tuo compagno sapere che sei con un terzo per il quale provi un'attrazione vera, mentale e non solo fisica. Potresti iniziare raccontando al marito su quali persone che entrambi conoscete hai fantasticato, per testare la sua reazione emotiva.`
       : '';
 
-    // Top 2 sections
-    const top2text = top2.map(p => categoryInstructions[p.index] || '').filter(Boolean).join(' ');
+    const top2text = top2.map(p => categoryText[p.id] || '').filter(Boolean).join(' ');
 
     const prompt = `Sei una psicologa specializzata in relazioni consensualmente non monogame e dinamiche HotWife. Una donna ha completato un test distribuendo 50 punti tra 10 caratteristiche del suo terzo ideale.
 
-Scrivi un'analisi psicologica profonda e intima seguendo questa struttura, ma in forma di paragrafo fluido continuo senza titoli o elenchi:
+Scrivi un'analisi psicologica profonda e intima in forma di paragrafo fluido continuo senza titoli o elenchi:
 
 PRIMA: Una descrizione di 2-3 righe del profilo del terzo ideale emerso dai suoi punteggi complessivi.
 
 ${q3text ? `POI: ${q3text}` : ''}
 
-${top2text ? `POI ANALIZZA IN DETTAGLIO: ${top2text} Per ciascuna di queste caratteristiche, collega la scelta al desiderio di accendere nel marito una gelosia intensa — non distruttiva, ma eccitante e rigenerante. Evidenzia come quella caratteristica sia uno strumento per far perdere al marito il controllo emotivo, spingendolo a volersi riappropriare di lei con una forza che nella routine quotidiana si era attenuata. Spiega il meccanismo biologico: la donna necessita di sentirsi attraente per partner multipli, l'uomo necessita di possessività verso una sola donna — entrambe queste spinte calano nel tempo e queste dinamiche le riaccendono.` : ''}
+${top2text ? `POI ANALIZZA IN DETTAGLIO: ${top2text} Per ciascuna di queste caratteristiche, collega la scelta al desiderio di accendere nel marito una gelosia intensa — eccitante e rigenerante. Evidenzia come quella caratteristica sia uno strumento per far perdere al marito il controllo emotivo, spingendolo a volersi riappropriare di lei con una forza che nella routine si era attenuata. Spiega il meccanismo biologico: la donna necessita di sentirsi attraente per partner multipli, l'uomo necessita di possessività verso una sola donna — entrambe queste spinte calano nel tempo e queste dinamiche le riaccendono.` : ''}
 
-CHIUDI: Con un tono intimo e complice, celebra la sua maturità emotiva. Falle capire che se seguirà questi desideri conquisterà non solo la libertà sessuale che desidera, ma legherà il proprio uomo a sé in modo indissolubile — lui penserà solo a lei, sentirà le farfalle nello stomaco ogni volta che lei sarà con un altro, si riapproprierà di lei con una passione che credeva perduta.
+CHIUDI: Con tono intimo e complice, celebra la sua maturità emotiva. Falle capire che seguendo questi desideri conquisterà la libertà sessuale che vuole e legherà il proprio uomo a sé in modo indissolubile — lui penserà solo a lei, sentirà le farfalle allo stomaco ogni volta che lei sarà con un altro, si riapproprierà di lei con una passione che credeva perduta.
 
 Scrivi in italiano, tono caldo e complice, paragrafo fluido, massimo 450 parole. Inizia direttamente senza saluti.`;
 
