@@ -10,12 +10,6 @@ exports.handler = async (event) => {
     const supabaseUrl = process.env.SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_ANON_KEY;
 
-    const savePayload = {
-      v1: values[0], v2: values[1], v3: values[2], v4: values[3],
-      v5: values[4], v6: values[5], v7: values[6], v8: values[7],
-      v9: values[8], v10: values[9],
-    };
-
     await fetch(`${supabaseUrl}/rest/v1/responses`, {
       method: 'POST',
       headers: {
@@ -24,50 +18,73 @@ exports.handler = async (event) => {
         'Authorization': `Bearer ${supabaseKey}`,
         'Prefer': 'return=minimal',
       },
-      body: JSON.stringify(savePayload),
+      body: JSON.stringify({
+        v1: values[0], v2: values[1], v3: values[2], v4: values[3],
+        v5: values[4], v6: values[5], v7: values[6], v8: values[7],
+        v9: values[8], v10: values[9],
+      }),
     });
 
-    // Build scores summary
-    const allScores = aspects
-      .map((a, i) => `- ${a.question}: ${values[i]} punti`)
-      .join('\n');
+    // Priority order for analysis (after emotional connection)
+    // Index: 0=quanto ci pensa, 1=esteticamente bello, 2=attrazione emotiva,
+    //        3=dominante, 4=lunghezza, 5=larghezza, 6=segno evidente,
+    //        7=bacio, 8=sesso orale, 9=sesso penetrativo
+    const PRIORITY = [
+      { index: 4, paired: 5, label: 'Dimensioni (lunghezza e larghezza)' },
+      { index: 0, label: 'Frequenza dei pensieri' },
+      { index: 6, label: 'Segno evidente' },
+      { index: 7, label: 'Il bacio' },
+      { index: 1, label: 'Aspetto estetico' },
+      { index: 3, label: 'Carattere dominante' },
+      { index: 8, label: 'Sesso orale' },
+      { index: 9, label: 'Sesso penetrativo' },
+    ];
 
-    // Question 3 (index 2) score
     const q3score = values[2];
-    const q3label = aspects[2].question;
 
-    // All aspects with 7+ points (excluding question 3)
-    const highScores = aspects
-      .map((a, i) => ({ label: a.question, value: values[i], index: i }))
-      .filter(a => a.index !== 2 && a.value >= 7);
+    // Find top 2 from priority list with score >= 7 (skip paired index 5)
+    const top2 = [];
+    for (const p of PRIORITY) {
+      if (top2.length >= 2) break;
+      const score = p.paired
+        ? Math.max(values[p.index], values[p.paired])
+        : values[p.index];
+      if (score >= 7) top2.push({ ...p, score });
+    }
 
-    const q3Section = q3score >= 5
-      ? `La domanda "${q3label}" ha ricevuto ${q3score} punti. Falle i complimenti perché ha capito come la leva più forte di questo gioco sia il coinvolgimento emotivo: sarebbe travolgente per il compagno sapere che lei è con un terzo per il quale prova un'attrazione vera, mentale e non solo fisica. Suggerisci che queste dinamiche vengano svolte non con il marito in presenza ma solo lei e il terzo. Suggerisci che potrebbe iniziare raccontando al marito su quali persone che entrambi conoscono magari ha fantasticato, per testare la sua reazione emotiva.`
+    // Build category instructions
+    const categoryInstructions = {
+      4: `Ha assegnato ${values[4]} punti alla lunghezza e ${values[5]} punti alla larghezza. Unisci le due dimensioni in un'unica riflessione: falla riflettere sul fatto che se cerca questa caratteristica, forse inconsapevolmente il suo corpo avverte una mancanza nel marito. Se lui è limitato sotto questo aspetto, scegliere un terzo molto dotato aiuta a creare un forte impatto emotivo e un senso di urgenza di riappropriarsi nel marito.`,
+      0: `Ha assegnato ${values[0]} punti alla frequenza con cui pensa a fare sesso con un altro uomo. Questo rivela quanto questa fantasia sia già presente e viva nella sua mente — non è una curiosità occasionale, è un desiderio radicato. Falla riflettere su quanto tempo ha già trascorso a immaginare questo scenario e su cosa significhi per lei finalmente agire.`,
+      6: `Ha assegnato ${values[6]} punti all'importanza di un segno evidente da mostrare al marito. Falla riflettere sul perché voglia mostrare al marito il segno evidente del piacere del terzo sul suo corpo, e quanto sia importante per lei che lui la accetti anche così — è un atto di fiducia estrema e al tempo stesso un potente innesco di gelosia e riappropriazione.`,
+      7: `Ha assegnato ${values[7]} punti all'importanza del bacio. Come l'attrazione emotiva, il bacio rivela che lei vuole sentirsi coinvolta anche emotivamente, non solo fisicamente. Falla riflettere su quanto questa dimensione intima e personale — normalmente riservata al partner — diventi ancora più carica di significato in questo contesto.`,
+      1: `Ha assegnato ${values[1]} punti all'aspetto estetico. Falla riflettere su cosa significa per lei desiderare un terzo che sia bello da guardare — non è vanità, è il desiderio di sentirsi scelta da qualcuno che anche gli altri desiderano, e di mostrare al marito che lei può attirare uomini che molte donne vorrebbero.`,
+      3: `Ha assegnato ${values[3]} punti al carattere dominante. Falla riflettere sul perché voglia sentirsi dominata da un altro uomo — spesso indica il desiderio di abbandonarsi completamente, di non dover controllare nulla, di essere semplicemente desiderata con una forza che non lascia spazio a dubbi. E questo contrasto con la vita quotidiana è esattamente ciò che rende il marito impazzire.`,
+      8: `Ha assegnato ${values[8]} punti all'abilità nel sesso orale. Falla riflettere su quanto questa preferenza riveli il desiderio di essere messa al centro, di ricevere piacere senza dover dare nulla in cambio — un piacere puro e dedicato solo a lei.`,
+      9: `Ha assegnato ${values[9]} punti al sesso penetrativo completo. Questo è il desiderio dell'esperienza totale — non una fantasia parziale ma il desiderio di viverla completamente, con tutto quello che comporta emotivamente e fisicamente.`,
+    };
+
+    // Q3 section
+    const q3text = q3score >= 5
+      ? `Hai assegnato ${q3score} punti all'attrazione emotiva verso qualcuno che già conosci. Questo è un segnale molto significativo: hai capito che la leva più forte di questo gioco non è fisica ma emotiva. Sarebbe travolgente per il tuo compagno sapere che sei con un terzo per il quale provi un'attrazione vera, mentale e non solo fisica. Potresti iniziare raccontando al marito su quali persone che entrambi conoscete hai fantasticato, per testare la sua reazione emotiva — è un modo delicato ma potentissimo per aprire questa conversazione.`
       : '';
 
-    const highSection = highScores.length > 0
-      ? `Le seguenti caratteristiche hanno ricevuto 7 o più punti e vanno analizzate in dettaglio: ${highScores.map(a => `"${a.label}" (${a.value} punti)`).join(', ')}.`
-      : '';
+    // Top 2 sections
+    const top2text = top2.map(p => categoryInstructions[p.index] || '').filter(Boolean).join(' ');
 
-    const prompt = `Sei una psicologa specializzata in relazioni consensualmente non monogame e dinamiche HotWife. Una donna ha completato un test sulle caratteristiche del suo terzo ideale, distribuendo 50 punti tra 10 aspetti (massimo 10 per aspetto).
+    const prompt = `Sei una psicologa specializzata in relazioni consensualmente non monogame e dinamiche HotWife. Una donna ha completato un test distribuendo 50 punti tra 10 caratteristiche del suo terzo ideale.
 
-Ecco i punteggi completi:
-${allScores}
+Scrivi un'analisi psicologica profonda e intima seguendo questa struttura, ma in forma di paragrafo fluido continuo senza titoli o elenchi:
 
-Scrivi un'analisi psicologica profonda e intima seguendo questa struttura, in forma di paragrafo fluido senza elenchi:
+PRIMA: Una descrizione di 2-3 righe del profilo del terzo ideale emerso dai suoi punteggi complessivi.
 
-1. PROFILO DEL TERZO IDEALE: Inizia con 2-3 righe che descrivono il profilo del terzo ideale emerso dalle sue risposte complessive.
+${q3text ? `POI: ${q3text}` : ''}
 
-${q3Section ? `2. CONNESSIONE EMOTIVA: ${q3Section}` : ''}
+${top2text ? `POI ANALIZZA IN DETTAGLIO: ${top2text} Per ciascuna di queste caratteristiche, collega la scelta al desiderio di accendere nel marito una gelosia intensa — non distruttiva, ma eccitante e rigenerante. Evidenzia come quella caratteristica sia uno strumento per far perdere al marito il controllo emotivo, spingendolo a volersi riappropriare di lei con una forza che nella routine quotidiana si era attenuata. Spiega il meccanismo biologico: la donna necessita di sentirsi attraente per partner multipli, l'uomo necessita di possessività verso una sola donna — entrambe queste spinte calano nel tempo e queste dinamiche le riaccendono.` : ''}
 
-${highSection ? `3. ANALISI DELLE PRIORITÀ PRINCIPALI: ${highSection} Per ciascuna di queste caratteristiche:
-- Aiutala a riflettere su cosa rivela di lei come donna e come HotWife, quali sono i trigger magari inconsapevoli che le rendono quella caratteristica attraente
-- Collega quella scelta al desiderio di accendere nel marito una gelosia intensa — non distruttiva, ma eccitante e rigenerante per la coppia
-- Evidenzia come quella caratteristica specifica del terzo sia uno strumento per far perdere al marito il controllo emotivo, spingendolo a volersi riappropriare di lei con una forza e un desiderio che nella routine quotidiana si era attenuato. Spiega perché questo può aiutare la coppia a mantenere viva la passione: nel caso della donna perché necessita biologicamente di risultare attraente a partner multipli, nel caso dell'uomo perché necessita di provare possessività verso una sola donna — cosa che cala nel tempo e che queste dinamiche aiutano a mantenere viva.` : ''}
+CHIUDI: Con un tono intimo e complice, celebra la sua maturità emotiva. Falle capire che se seguirà questi desideri conquisterà non solo la libertà sessuale che desidera, ma legherà il proprio uomo a sé in modo indissolubile — lui penserà solo a lei, sentirà le farfalle nello stomaco ogni volta che lei sarà con un altro, si riapproprierà di lei con una passione che credeva perduta.
 
-4. TONO E CHIUSURA: Usa un tono intimo, complice, come una conversazione tra donne consapevoli. Celebra la sua maturità emotiva e fiducia nel rapporto nel saper orchestrare queste dinamiche e nell'aver saputo confessare al marito una dinamica — quella di sentirsi desiderata — comune in tutte le donne ma che in poche riescono a confessare. Chiudi con una frase che le faccia capire che se seguirà questi suoi desideri conquisterà non solo la libertà sessuale che desidera, ma legherà il proprio uomo a sé in modo indissolubile: sarà l'unico suo pensiero, gli darà le farfalle nello stomaco come al primo appuntamento ogni volta che lei sarà con un altro.
-
-Scrivi in forma di paragrafo fluido e coinvolgente, senza elenchi puntati, senza titoli di sezione. Inizia direttamente senza saluti o introduzioni.`;
+Scrivi in italiano, tono caldo e complice, paragrafo fluido, massimo 450 parole. Inizia direttamente senza saluti.`;
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -77,8 +94,8 @@ Scrivi in forma di paragrafo fluido e coinvolgente, senza elenchi puntati, senza
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 1200,
+        model: 'claude-sonnet-4-5',
+        max_tokens: 800,
         messages: [{ role: 'user', content: prompt }],
       }),
     });
