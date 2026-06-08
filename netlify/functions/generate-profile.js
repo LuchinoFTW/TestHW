@@ -45,7 +45,10 @@ ${allScores}
 
 Le sue priorità principali sono: ${top3.map(t => `"${t.label}" (${t.value} punti)`).join(', ')}.
 
-Scrivi un'analisi psicologica profonda e intima di 5-6 frasi. Per ogni categoria con almeno 7 punti assegnati.
+Scrivi un'analisi psicologica profonda e intima. Inizia con un profilo del "terzo" ideale secondo le sue risposte di 2 o 3 righe.
+Poi inizia con una sezione riguardante la domanda 3 (se vuole una persona dove c'è già una connessione emotiva). Se su questa domanda ci sono almeno 5 pnti spesi allora falle i complimenti perché ha capito come la leva più forte di questo gioco sia il coinvolgimento emotivo e di come sarebbe travolgente per il compagno sapere che lei è con un terzo per il quale prova un'attrazione vera, mentale e non solo fisica. Suggerisci che queste dinamiche vengano svolte non con il marito in presenza ma solo lei e il terzo, e che anzi sarebbe addirittura meglio che il terzo non sapesse che si tratta di un gioco condiviso, per rendere tutto più vero. Essendo una dinamica intensa potrebbe iniziare raccontando al marito su quali persone che entrambe conoscono (e ci sono sempre, in tutte le coppie) magari ha fantasticato, per testare la sua reazione emotiva.
+
+Poi vai nel dettaglio delle altre voci dove ha speso almeno 7 punti
 - Aiutala a riflettere su cosa rivela di lei come donna e come HotWife, quali sono i trigger magari inconsapevoli che giela rendono attraente
 - Collega quella scelta al desiderio di accendere nel marito una gelosia intensa — non distruttiva, ma eccitante e rigenerante per la coppia
 - Evidenzia come quella caratteristica specifica del terzo sia uno strumento per far perdere al marito il controllo emotivo, spingendolo a volersi riappropriare di lei con una forza e un desiderio che nella routine quotidiana si era attenuato. Specifica perché questo può aiutare la coppia a mantenere viva la passione che nel caso della donna necessita biologicamente di risultare attraente a partner multipli mentre nel caso dell'uomo necessita di provare possessività verso una sola donna (cosa che però cala nel corso del tempo e che queste dinamiche aiutano a mantenere viva).
