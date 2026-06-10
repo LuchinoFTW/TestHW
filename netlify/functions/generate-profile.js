@@ -55,9 +55,7 @@ exports.handler = async (event) => {
       penetrativo: `Ha dedicato ${values[9]} punti all'esperienza penetrativa completa. Questo parla del desiderio di vivere l'esperienza nella sua totalità, senza mezze misure — è la voglia di sentirsi completamente presente e appagata in ogni sua dimensione.`,
     };
 
-    const q3text = q3score >= 5
-      ? `Ha dedicato ${q3score} punti alla scelta di un terzo per cui prova già un'attrazione. Giocare con qualcuno con cui c'è già una connessione e un desiderio pregresso rende tutto più vivo e coinvolgente, ma allo stesso tempo straordinariamente pericoloso — e quindi eccitante — per il partner. Se ha assegnato punti a questo aspetto significa che già in passato questa fantasia è stata presente: farla riflettere su come l'ha gestita, come si è sentita e se ne ha messo a conoscenza il partner. Può esplorare la reazione del partner condividendo apertamente con lui su quali persone che entrambi conoscono ha fantasticato, per capire come entrambi si sentirebbero nel realizzare quella che è la fantasia più intensa in questo gioco. Se la coppia preferisce non coinvolgere persone del proprio giro, potrebbe valere la pena riflettere sull'idea di un terzo con cui costruire nel tempo una certa familiarità, piuttosto che variarlo continuamente — per avvicinarsi a quella connessione emotiva che lei sente come essenziale.`
-      : '';
+    const q3text = '';
 
     const top2text = top2.map(p => categoryText[p.id] || '').filter(Boolean).join(' ');
 
