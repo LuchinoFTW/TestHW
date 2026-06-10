@@ -8,9 +8,9 @@ const ASPECTS = [
   { emoji: "📏", question: "Quanto conta la lunghezza della sua dotazione?" },
   { emoji: "⭕", question: "Quanto conta lo spessore della sua dotazione?" },
   { emoji: "💦", question: "Quanto è importante che possa lasciare un segno molto evidente da mostrare a tuo marito?" },
-  { emoji: "👄", question: "Quanto è importante che sia bravo a baciare?" },
-  { emoji: "👅", question: "Quanto conta l'abilità nel sesso orale?" },
-  { emoji: "🔥", question: "Quanto è importante che sia bravo nella penetrazione (movimento, passione, durate, ecc,"},
+  { emoji: "👄", question: "Quanto è importante che ti faccia sentire persa tra le sue labbra?" },
+  { emoji: "👅", question: "Quanto conta l'abilità con la lingua?" },
+  { emoji: "🔥", question: "Quanto è importante che sappia muoversi con sensualità e vigore in tutte le posizioni, durando per tutto il tempo necessario?" },
 ];
 
 const MAX_TOTAL = 50;
@@ -50,9 +50,9 @@ export default function App() {
   const [values, setValues] = useState(Array(10).fill(0));
   const [result, setResult] = useState("");
   const [error, setError] = useState("");
+  const [warningType, setWarningType] = useState("");
 
   const total = values.reduce((a, b) => a + b, 0);
-  const remaining = MAX_TOTAL - total;
 
   function handleSlider(idx, newVal) {
     const otherSum = values.reduce((a, b, i) => i !== idx ? a + b : a, 0);
@@ -61,6 +61,20 @@ export default function App() {
   }
 
   async function handleSubmit() {
+    // Check 1: frequenza pensieri (index 0) >= 8 AND attrazione emotiva (index 2) >= 8
+    if (values[0] >= 8 && values[2] >= 8) {
+      setWarningType("attrazione");
+      setScreen("warning");
+      return;
+    }
+
+    // Check 2: differenza tra lunghezza (index 4) e larghezza (index 5) > 5
+    if (Math.abs(values[4] - values[5]) > 5) {
+      setWarningType("incoerenza");
+      setScreen("warning");
+      return;
+    }
+
     setError("");
     setScreen("loading");
     try {
@@ -83,6 +97,7 @@ export default function App() {
     setValues(Array(10).fill(0));
     setResult("");
     setError("");
+    setWarningType("");
     setScreen("intro");
   }
 
@@ -116,7 +131,7 @@ export default function App() {
               Lo sapevi che le caratteristiche che sogni nel terzo per i tuoi giochi possono rivelarti tanti aspetti che magari non avevi mai considerato su cosa inconsciamente ti eccita nel tuo ruolo di HotWife?
             </p>
             <p className="intro-text">
-              Distribuisci 50 punti totali tra le 10 caratteristiche che vedi di seguito e la nostra AI addestrata con oltre 1.000 libri e 2.000 siti sulle relazioni non monogame ti farà veramente capire chi sei.
+              Distribuisci fino a 50 punti tra le 10 caratteristiche che vedi di seguito e la nostra AI addestrata con oltre 1.000 libri e 2.000 siti sulle relazioni non monogame ti farà veramente capire chi sei.
             </p>
             <div className="intro-divider" />
             <button className="btn btn-primary" onClick={() => setScreen("quiz")}>
@@ -128,10 +143,10 @@ export default function App() {
         {screen === "quiz" && (
           <div className="screen active">
             <div className="section-label">Il tuo profilo</div>
-            <div className="section-title">Distribuisci 50 punti — massimo 10 per caratteristica</div>
+            <div className="section-title">Massimo 10 punti per caratteristica — fino a 50 in totale</div>
 
             <div className="budget-box">
-              <div className={`budget-number ${remaining === 0 ? 'done' : ''}`}>{remaining}</div>
+              <div className={`budget-number ${total >= 50 ? 'done' : ''}`}>{50 - total}</div>
               <div className="budget-right">
                 <div className="budget-sublabel">Punti rimasti</div>
                 <div className="progress-track">
@@ -152,19 +167,63 @@ export default function App() {
             ))}
 
             {error && <p className="hint-msg" style={{ color: '#c0392b' }}>{error}</p>}
-            {remaining > 0 && (
-              <p className="hint-msg">Hai ancora {remaining} punti da assegnare</p>
+            {total < 10 && (
+              <p className="hint-msg">Assegna almeno 10 punti per continuare</p>
             )}
 
             <button
               className="btn btn-primary"
               onClick={handleSubmit}
-              disabled={remaining !== 0}
+              disabled={total < 10}
               style={{ marginTop: '1.5rem' }}
             >
               Scopri il tuo profilo →
             </button>
             <button className="btn btn-ghost" onClick={reset}>← Ricomincia</button>
+          </div>
+        )}
+
+        {screen === "warning" && (
+          <div className="screen active">
+            {warningType === "attrazione" && (
+              <>
+                <div className="result-intro">
+                  <div className="section-label">Un momento</div>
+                  <div className="section-title">Aspetta un momento.</div>
+                </div>
+                <div className="result-card">
+                  <div className="result-body">
+                    <p>Le tue risposte mostrano qualcosa di interessante: hai assegnato un punteggio molto alto sia alla frequenza con cui pensi a fare sesso con un altro uomo, sia all'importanza che sia qualcuno che già conosci e per cui provi un'attrazione reale.</p>
+                    <p>Questa combinazione ci porta a farti una domanda diretta: esiste già una persona specifica nella tua vita verso cui senti questa attrazione?</p>
+                    <p>Se la risposta è sì, vale la pena fermarsi un momento prima di continuare. A volte quello che sembra un fantastico gioco di coppia può nascondere un'attrazione emotiva reale verso qualcuno di specifico — e in quel caso le dinamiche in gioco sono diverse e meritano una riflessione più profonda, prima con te stessa e poi eventualmente con il tuo partner.</p>
+                    <p>Non c'è nulla di sbagliato in quello che senti. Ma è importante che tu lo riconosca con onestà.</p>
+                  </div>
+                </div>
+              </>
+            )}
+
+            {warningType === "incoerenza" && (
+              <>
+                <div className="result-intro">
+                  <div className="section-label">Attenzione</div>
+                  <div className="section-title">Le tue risposte sembrano un po' in contraddizione.</div>
+                </div>
+                <div className="result-card">
+                  <div className="result-body">
+                    <p>Hai assegnato punteggi molto diversi alla lunghezza e alla larghezza — due caratteristiche che di solito vanno di pari passo nella percezione fisica.</p>
+                    <p>Questo potrebbe significare che hai risposto di fretta o senza soffermarti su cosa significasse davvero ogni domanda.</p>
+                    <p>Ti invitiamo a rifare il test con più calma, dedicando qualche secondo a ogni caratteristica prima di assegnare il punteggio.</p>
+                  </div>
+                </div>
+              </>
+            )}
+
+            <div className="result-sep">
+              <div className="result-sep-line" />
+              <div className="result-sep-text">HWA — HotWife Awakening</div>
+              <div className="result-sep-line" />
+            </div>
+            <button className="btn btn-ghost" onClick={reset}>← Ricomincia il quiz</button>
           </div>
         )}
 
