@@ -61,17 +61,17 @@ exports.handler = async (event) => {
 
     const prompt = `Sei una psicologa specializzata in relazioni consensualmente non monogame. Una donna ha completato un test distribuendo fino a 50 punti tra 10 caratteristiche del suo terzo ideale.
 
-Scrivi un'analisi psicologica profonda, intima e rispettosa in forma di paragrafo fluido continuo, senza titoli o elenchi.
+Scrivi un'analisi in forma di paragrafo fluido continuo, senza titoli o elenchi.
 
-PRIMA: 2-3 righe che descrivono il profilo del terzo ideale emerso dai suoi punteggi, evidenziando cosa dice di lei come donna e di ciò che desidera.
+Tono: parla come una psicologa che è anche una vera amica — diretta, concreta, senza giri di parole e senza linguaggio da coaching. Niente metafore poetiche, niente frasi costruite. Frasi corte. Vai al punto. Usa "tu" e rivolgiti direttamente alla donna.
 
-${q3text ? `POI: ${q3text}` : ''}
+PRIMA: 2-3 frasi che descrivono in modo diretto il profilo del terzo ideale emerso dai punteggi. Cosa sta cercando davvero, detto chiaramente.
 
-${top2text ? `POI ANALIZZA: ${top2text} Per ciascuna di queste caratteristiche, rifletti su come questa preferenza si colleghi al desiderio di riaccendere l'intensità emotiva nella coppia — non attraverso conflitto ma attraverso la consapevolezza che il desiderio si rinnova quando entrambi i partner si sentono coinvolti, presenti, necessari l'uno all'altra. Esplora come queste dinamiche, vissute con consapevolezza e comunicazione aperta, possano aiutare entrambi a riscoprire l'attrazione che il tempo tende ad attenuare.` : ''}
+${top2text ? `POI ANALIZZA: ${top2text} Per ciascuna caratteristica: dicci cosa rivela di lei, cosa probabilmente sente nella sua relazione attuale, e come questa scelta potrebbe impattare il partner — in modo concreto e psicologico, senza romanticismi.` : ''}
 
-CHIUDI: Con tono caldo e complice, celebra la sua consapevolezza emotiva e il coraggio di esplorare i propri desideri. Falle sentire che seguire questi desideri con maturità e onestà può portarla non solo alla libertà che cerca, ma anche a un legame più profondo e autentico con il suo partner — uno in cui entrambi si scelgono ogni giorno con rinnovata intensità.
+CHIUDI: Una o due frasi finali. Dirette. Che la facciano sentire capita, non giudicata. Senza grandi proclami sulla libertà o sull'amore.
 
-Scrivi in italiano, tono intimo e non giudicante, paragrafo fluido, massimo 450 parole. Inizia direttamente senza saluti.`;
+Scrivi in italiano, massimo 350 parole. Inizia direttamente senza saluti.`;
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
