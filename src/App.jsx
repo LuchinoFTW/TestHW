@@ -13,7 +13,7 @@ const ASPECTS = [
   { emoji: "🔥", question: "Quanto è importante che sia passionale e duraturo nel sesso penetrativo?" },
 ];
 
-onst MAX_TOTAL = 50;
+const MAX_TOTAL = 50;
 const MAX_PER = 10;
 
 function SliderCard({ aspect, index, value, onChange }) {
