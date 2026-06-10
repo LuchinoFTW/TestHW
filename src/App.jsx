@@ -13,7 +13,7 @@ const ASPECTS = [
   { emoji: "🔥", question: "Quanto è importante che sia passionale e duraturo nel sesso penetrativo?" },
 ];
 
-const MAX_TOTAL = 50;
+onst MAX_TOTAL = 50;
 const MAX_PER = 10;
 
 function SliderCard({ aspect, index, value, onChange }) {
@@ -252,6 +252,17 @@ export default function App() {
                 </div>
               ))}
             </div>
+
+            {values[2] >= 5 && (
+              <div className="result-card" style={{ marginBottom: '1rem' }}>
+                <div className="result-card-label">L'attrazione che già conosci</div>
+                <div className="result-body">
+                  <p>Hai dedicato punti importanti alla scelta di un terzo per cui provi già un'attrazione. Giocare con qualcuno con cui c'è già una connessione e un desiderio pregresso rende tutto più vivo e coinvolgente, ma allo stesso tempo straordinariamente pericoloso — e quindi eccitante — per il partner.</p>
+                  <p>Se hai assegnato punti a questo aspetto significa che già in passato questa fantasia è stata presente: rifletti su come l'hai gestita, come ti sei sentita e se ne hai messo a conoscenza il tuo partner. Puoi esplorare la sua reazione condividendo apertamente con lui su quali persone che entrambi conoscete hai fantasticato, per capire come vi sentireste entrambi nel realizzare quella che è la fantasia più intensa in questo gioco.</p>
+                  <p>Se preferite non coinvolgere persone del vostro giro, potrebbe valere la pena riflettere sull'idea di un terzo con cui costruire nel tempo una certa familiarità, piuttosto che variarlo continuamente — per avvicinarsi a quella connessione emotiva che senti come essenziale.</p>
+                </div>
+              </div>
+            )}
 
             <div className="result-card">
               <div className="result-card-label">La tua psicologia</div>
