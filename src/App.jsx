@@ -2,15 +2,15 @@ import { useState, useEffect } from "react";
 
 const ASPECTS = [
   { emoji: "🌀", question: "Quanto spesso ti capita di pensare all'idea di fare sesso con un altro uomo? (1 = mai, 10 = tutti i giorni)" },
-  { emoji: "😍", question: "Quanto conta che sia esteticamente bello?" },
-  { emoji: "🔮", question: "Quanto ti piacerebbe che fosse qualcuno che già conosci, per cui provi un'attrazione mai messa in pratica?" },
+  { emoji: "😍", question: "Quanto conta che sia esteticamente bello e affascinante?" },
+  { emoji: "🔮", question: "Quanto ti piacerebbe che fosse qualcuno che già conosci, per cui magari provi un'attrazione mai messa in pratica?" },
   { emoji: "👑", question: "Quanto vuoi che sia dominante e fisico durante il rapporto, anche a costo di lasciarti segni?" },
   { emoji: "📏", question: "Quanto conta la lunghezza della sua dotazione?" },
   { emoji: "⭕", question: "Quanto conta lo spessore della sua dotazione?" },
-  { emoji: "💦", question: "Quanto è importante che possa lasciare un segno molto evidente da mostrare a tuo marito?" },
-  { emoji: "👄", question: "Quanto è importante che ti faccia sentire persa tra le sue labbra?" },
-  { emoji: "👅", question: "Quanto conta l'abilità con la lingua?" },
-  { emoji: "🔥", question: "Quanto è importante che sappia muoversi con sensualità e vigore in tutte le posizioni, durando per tutto il tempo necessario?" },
+  { emoji: "💦", question: "Quanto è importante che possa regalarti un finale evidente da mostrare a tuo marito?" },
+  { emoji: "👄", question: "Quanto è importante che sia bravo e coinvolgente nel bacio?" },
+  { emoji: "👅", question: "Quanto è importante che sia bravo nel sesso orale?" },
+  { emoji: "🔥", question: "Quanto è importante che sia passionale e duraturo nel sesso penetrativo?" },
 ];
 
 const MAX_TOTAL = 50;
