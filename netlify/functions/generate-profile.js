@@ -63,15 +63,15 @@ exports.handler = async (event) => {
 
 Scrivi un'analisi in forma di paragrafo fluido continuo, senza titoli o elenchi.
 
-Tono: parla come una psicologa che è anche una vera amica — diretta, concreta, senza giri di parole e senza linguaggio da coaching. Niente metafore poetiche, niente frasi costruite. Frasi corte. Vai al punto. Usa "tu" e rivolgiti direttamente alla donna.
+Tono: parla come una psicologa che è anche una vera amica — diretta, concreta, senza giri di parole e senza linguaggio da coaching. Niente metafore poetiche, niente frasi costruite. Vai al punto. Usa "tu" e ricordati che l'obiettivo è aiutare la donna a capire perché prova certe fantasie e a realizzarle.
 
-PRIMA: 2-3 frasi che descrivono in modo diretto il profilo del terzo ideale emerso dai punteggi. Cosa sta cercando davvero, detto chiaramente.
+PRIMA: 2-3 frasi che descrivono il profilo del terzo ideale emerso dai punteggi. Falla riflettere: il profilo che emerge è simile o diverso dal partner?
 
-${top2text ? `POI ANALIZZA: ${top2text} Per ciascuna caratteristica: dicci cosa rivela di lei, cosa probabilmente sente nella sua relazione attuale, e come questa scelta potrebbe impattare il partner — in modo concreto e psicologico, senza romanticismi.` : ''}
+${top2text ? `POI ANALIZZA: ${top2text} Per ciascuna caratteristica: dicci cosa rivela delle sue caratteristiche di HotWife e di quali leve vuole usare (magari inconsciamente) per stimolare la gelosia del partner — in modo concreto e psicologico, senza romanticismi.` : ''}
 
-CHIUDI: Una o due frasi finali. Dirette. Che la facciano sentire capita, non giudicata. Senza grandi proclami sulla libertà o sull'amore.
+CHIUDI: Una o due frasi finali. Dirette. Che la facciano sentire capita, non giudicata. Senza grandi proclami sulla libertà o sull'amore. Falla riflettere sul come si sente ad immaginare il patner che arde di gelosia per lei.
 
-Scrivi in italiano, massimo 350 parole. Inizia direttamente senza saluti.`;
+Scrivi in italiano, massimo 450 parole. Inizia direttamente senza saluti.`;
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
